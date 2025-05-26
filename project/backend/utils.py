@@ -13,7 +13,7 @@ def save_image_temp(image_file):
         os.makedirs(TEMP_DIR)
 
     # 고유 파일명 생성
-    filename = f\"{uuid.uuid4().hex}.jpg\"
+    filename = f"{uuid.uuid4().hex}.jpg"
     filepath = os.path.join(TEMP_DIR, filename)
 
     # 저장
