@@ -23,7 +23,7 @@ def generate_summary(description, similarity_score):
 """
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "너는 뉴스 제보를 정리하고 신뢰도를 분석하는 요약 전문가야."},
             {"role": "user", "content": prompt}
@@ -43,7 +43,7 @@ def classify_category(description):
 """
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "너는 뉴스 제보 내용을 보고 카테고리를 분류하는 전문가야."},
             {"role": "user", "content": prompt}
@@ -63,7 +63,7 @@ def rate_importance(description):
 """
 
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "너는 제보의 중요도를 평가하는 전문가야."},
             {"role": "user", "content": prompt}
