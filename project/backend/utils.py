@@ -87,9 +87,13 @@ def load_collected_data():
 
 # 이미지 벡터 유사도 중복 감지
 def check_duplicate(new_vector, old_vectors, threshold=0.85):
+    old_vectors = [np.array(v) for v in old_vectors if v is not None]
     if not old_vectors:
         return False
+
+    old_vectors = np.vstack(old_vectors)
     similarities = cosine_similarity([new_vector], old_vectors)
+
     return np.max(similarities) > threshold
 
 # 현재 시간 타임스탬프 반환
