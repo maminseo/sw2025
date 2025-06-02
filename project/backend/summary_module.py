@@ -1,8 +1,11 @@
 # backend/summary_module.py
 
 import openai
+import os
+from dotenv import load_dotenv
 
-openai.api_key = "your-openai-api-key"  # 실제 키로 대체 필요
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def generate_summary(description, similarity_score):
     prompt = f"""
