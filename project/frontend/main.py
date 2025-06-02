@@ -7,7 +7,7 @@ st.set_page_config(page_title="뉴스 제보 분석기", layout="centered")
 # 배경 이미지 base64 인코딩 (없으면 None)
 encoded = None
 try:
-    with open("static/nwspaper.jpg", "rb") as f:
+    with open("static/newspaper.jpg", "rb") as f:
         img_bytes = f.read()
         encoded = base64.b64encode(img_bytes).decode()
 except FileNotFoundError:
