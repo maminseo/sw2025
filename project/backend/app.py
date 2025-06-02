@@ -7,8 +7,9 @@ from clip_module import get_clip_similarity, get_clip_vector
 from summary_module import generate_summary, classify_category, rate_importance
 from utils import (
     save_image_temp, save_collected_data, load_collected_data,
-    make_timestamp, check_duplicate
+    make_timestamp, check_duplicate, init_db
 )
+init_db()
 
 import numpy as np
 
