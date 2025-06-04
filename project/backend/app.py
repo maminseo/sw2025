@@ -7,8 +7,9 @@ from clip_module import get_clip_similarity, get_clip_vector
 from summary_module import generate_summary, classify_category, rate_importance
 from utils import (
     save_image_temp, save_collected_data, load_collected_data,
-    make_timestamp, check_duplicate
+    make_timestamp, check_duplicate, init_db
 )
+init_db()
 
 import numpy as np
 
@@ -52,7 +53,7 @@ def analyze():
         existing_vectors = [d["image_vector"] for d in all_data if d.get("image_vector")]
 
         is_duplicate = False
-        if image_vector:
+        if image_vector is not None:
             is_duplicate = check_duplicate(image_vector, existing_vectors)
 
         # 7. DB 저장
@@ -60,10 +61,10 @@ def analyze():
             "timestamp": make_timestamp(),
             "description": description,
             "image_path": image_path,
-            "similarity": similarity_score,
+            "similarity": float(similarity_score) if isinstance(similarity_score, np.generic) else similarity_score,
             "summary": summary,
             "category": category,
-            "importance": importance,
+            "importance": int(importance) if isinstance(importance, np.generic) else importance,
             "duplicate": is_duplicate,
             "image_vector": image_vector.tolist() if image_vector is not None else None
         }
@@ -79,6 +80,9 @@ def analyze():
         })
 
     except Exception as e:
+        print("💥 [ERROR] 예외 발생:", e)
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
