@@ -29,7 +29,7 @@ if encoded:
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: white;
+            color: black;
         }}
 
         h2, h3 {{
@@ -39,7 +39,7 @@ if encoded:
     .stTextInput > div > input,
     .stTextArea > div > textarea {{
         background-color: rgba(255, 255, 255, 0.9);
-        color: black !important;
+        color: white !important;
         border-radius: 8px;
     }}
 
@@ -61,7 +61,7 @@ if encoded:
             color: white;
         }}
         button['primary']{{
-            color:black;
+            background-color:white !improtant;
         }}
         </style>
         """,
@@ -112,7 +112,7 @@ else:
 
 # 제목 및 설명
 st.markdown("## 📰 뉴스 제보 진위 분석기")
-st.markdown("이미지와 설명을 입력하면 요약 및 신뢰도를 분석해줍니다.")
+st.markdown("<span style='color: white;'>이미지와 설명을 입력하면 요약 및 신뢰도를 분석해줍니다.</span>", unsafe_allow_html=True)
 st.markdown("<span style='color: white;'>______________________________________________________________________________________</span>", unsafe_allow_html=True)
 #로그인 입력
 
@@ -190,7 +190,7 @@ col1, col2, col3 = st.columns([6, 3, 3])
 with col3:
     if st.session_state.logged_in:
         with st.form("logout"):
-            logout = st.form_submit_button("🔑관리자 로그아웃")
+            logout = st.form_submit_button("🔑로그아웃")
     else:
         with st.form("login_form"):
             pw = st.text_input("비밀번호 입력", type="password", max_chars=4)
