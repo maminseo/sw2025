@@ -115,14 +115,17 @@ st.markdown("## 📰 뉴스 제보 진위 분석기")
 st.markdown("<span style='color: white;'>이미지와 설명을 입력하면 요약 및 신뢰도를 분석해줍니다.</span>", unsafe_allow_html=True)
 st.markdown("<span style='color: white;'>______________________________________________________________________________________</span>", unsafe_allow_html=True)
 #로그인 입력
-
+# :green[🖼️ 이미지 업로드]
 # 입력 폼
 with st.form("input_form"):
-    image = st.file_uploader("🖼️ 이미지 업로드", type=["jpg", "png", "jpeg"])
+    image = st.file_uploader("", type=["jpg", "png", "jpeg"])
+    st.markdown("<p style='color: white; font-weight:bold; margin-top: 1px;'>🖼️ 이미지 업로드</p>", unsafe_allow_html=True)
     description = st.text_area(
-        "✏️ 제보 설명 입력",
+        "",
         placeholder="내용을 입력해주세요"
     )
+    st.markdown("<p style='color: white; font-weight:bold; margin-top: 1px;'>✏️ 제보 설명 입력</p>", unsafe_allow_html=True)
+    st.markdown("")
     submitted = st.form_submit_button("🔍분석 시작!")
 
 st.markdown("<span style='color: white;'>______________________________________________________________________________________</span>", unsafe_allow_html=True)
@@ -193,7 +196,7 @@ with col3:
             logout = st.form_submit_button("🔑로그아웃")
     else:
         with st.form("login_form"):
-            pw = st.text_input("비밀번호 입력", type="password", max_chars=4)
+            pw = st.text_input(":green[비밀번호 입력]",type="password", max_chars=4) 
             login = st.form_submit_button("관리자 로그인")
 
 if logout:
