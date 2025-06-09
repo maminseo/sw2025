@@ -99,3 +99,16 @@ def check_duplicate(new_vector, old_vectors, threshold=0.85):
 # 현재 시간 타임스탬프 반환
 def make_timestamp():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+def count_similar_reports(new_vector, old_vectors, threshold=0.85):
+    """
+    주어진 벡터와 유사한 벡터가 몇 개인지 카운트
+    """
+    old_vectors = [np.array(v) for v in old_vectors if v is not None]
+    if not old_vectors:
+        return 0
+
+    old_vectors = np.vstack(old_vectors)
+    similarities = cosine_similarity([new_vector], old_vectors)
+    count = (similarities[0] > threshold).sum()
+    return int(count)

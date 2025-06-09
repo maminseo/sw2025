@@ -15,14 +15,16 @@ def generate_summary(description, similarity_score):
 \"{description}\"
 
 이 제보는 이미지와 설명 간 유사도가 {similarity_score}입니다.
-이 정보를 요약하고, 신뢰도를 '낮음/중간/높음' 중 하나로 판단해주세요.
-출력 형식은 아래와 같게 해주세요.
+이 정보를 반드시 간결하게 요약하고, 신뢰도를 '낮음/중간/높음' 중 하나로 판단해주세요.
+추가 설명이나 사족 없이, 아래 형식 그대로만 출력하세요.
+
+출력 형식:
 
 [요약]
-내용 요약 1~2문장
+(1~2문장 요약)
 
 [신뢰도]
-낮음 / 중간 / 높음 중 하나
+낮음 / 중간 / 높음
 """
 
     response = openai.ChatCompletion.create(
