@@ -167,6 +167,11 @@ if submitted:
                     else:
                         color = '#43a047'  # 초록
 
+                    # 신뢰도 기반 다수 제보 표시
+                    if result.get("reliable", False):
+                        st.markdown("### ✅ 다수의 제보가 있어 신뢰도가 높습니다.")
+                        st.markdown(f"🔁 유사 제보 수: {result.get('similar_count', 0)}건")
+
                     # 점수 막대
                     st.markdown(f"""
                     <div class="score-bar">
@@ -211,4 +216,3 @@ if login:
         st.toast("로그인 성공! manage페이지를 볼 수 있습니다.")
     else:
         st.error("비밀번호 오류")
-        
