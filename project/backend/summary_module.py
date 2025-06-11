@@ -41,16 +41,23 @@ def classify_category(description):
     prompt = f"""
 설명: "{description}"
 
-이 사건의 유형을 하나 선택하세요:
-[화재 / 교통사고 / 폭력 / 자연재해 / 기타]
+다음 중 가장 적절한 사건 유형을 선택하세요:
+[화재 / 교통사고 / 폭력 / 자연재해 / 인명 사고 / 기타]
 
-형식: 카테고리: (선택한 항목)
+[화재] 불이 발생한 사건 (예: 건물 화재, 차량 화재 등)
+[교통사고] 차량 충돌이나 도로에서의 사고
+[폭력] 사람 간의 물리적 충돌, 공격, 위협 등 (예: 싸움, 칼부림, 폭행 등)
+[자연재해] 기후나 자연 현상으로 인한 사건 (예: 홍수, 지진, 태풍 등)
+[인명 사고] 사람의 부상, 사망, 실종, 추락 등 인적 피해 중심 사건 (예: 익사, 실종, 추락 등)
+[기타] 위 항목에 해당하지 않는 기타 사건
+
+출력 형식: 카테고리: (선택한 항목)
 """
 
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": "너는 뉴스 제보 내용을 보고 카테고리를 분류하는 전문가야."},
+            {"role": "system", "content": "너는 뉴스 제보 내용을 분석하여 사건 유형을 분류하는 전문가야."},
             {"role": "user", "content": prompt}
         ]
     )
@@ -70,7 +77,7 @@ def rate_importance(description):
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": "너는 제보의 중요도를 평가하는 전문가야."},
+            {"role": "system", "content": "너는 뉴스 제보의 중요도를 평가하는 전문가야."},
             {"role": "user", "content": prompt}
         ]
     )
