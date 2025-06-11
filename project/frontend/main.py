@@ -29,7 +29,7 @@ if encoded:
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            color: black;
+            color: white;
         }}
 
         h2, h3 {{
@@ -126,7 +126,7 @@ with st.form("input_form"):
     )
     st.markdown("<p style='color: white; font-weight:bold; margin-top: 1px;'>✏️ 제보 설명 입력</p>", unsafe_allow_html=True)
     st.markdown("")
-    submitted = st.form_submit_button("🔍분석 시작!")
+    submitted = st.form_submit_button(" :green[🔍분석 시작!]")
 
 st.markdown("<span style='color: white;'>______________________________________________________________________________________</span>", unsafe_allow_html=True)
 
@@ -198,11 +198,11 @@ col1, col2, col3 = st.columns([6, 3, 3])
 with col3:
     if st.session_state.logged_in:
         with st.form("logout"):
-            logout = st.form_submit_button("🔑로그아웃")
+            logout = st.form_submit_button(" :green[🔑로그아웃]")
     else:
         with st.form("login_form"):
             pw = st.text_input(":green[비밀번호 입력]",type="password", max_chars=4) 
-            login = st.form_submit_button("관리자 로그인")
+            login = st.form_submit_button(":green[관리자 로그인]")
 
 if logout:
     st.toast("로그아웃 되었습니다.")
