@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from clip_module import get_clip_similarity, get_clip_vector, extract_keywords
-from summary_module import generate_summary, classify_category, rate_importance
+from summary_module import generate_summary, classify_category, rate_importance, translate_to_english
 from utils import (
     save_image_temp, save_collected_data, load_collected_data,
     make_timestamp, check_duplicate, init_db, count_similar_reports
@@ -9,30 +9,6 @@ import numpy as np
 
 app = Flask(__name__)
 init_db()
-
-# 🔥 키워드 리스트
-FIRE_KEYWORDS = ["불", "화재", "연기", "화염", "폭발", "소방차", "불길"]
-INJURY_KEYWORDS = ["사망", "사고", "실종", "익사", "부상", "추락"]
-
-# ✅ 보정 함수
-def adjust_similarity(description, image_path, original_score, category=None):
-    has_fire_kw = any(k in description for k in FIRE_KEYWORDS)
-    has_injury_kw = any(k in description for k in INJURY_KEYWORDS)
-    is_fire_image = "fire" in image_path.lower() or "화재" in image_path.lower()
-
-    adjusted = original_score
-
-    if is_fire_image and not has_fire_kw:
-        adjusted *= 0.1
-    elif has_fire_kw and is_fire_image:
-        adjusted *= 1.3
-    elif has_fire_kw and category and "화재" in category:
-        adjusted *= 1.1
-    elif has_injury_kw and is_fire_image:
-        adjusted *= 0.2
-
-    return min(max(adjusted, 0), 1.0)
-
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
@@ -45,28 +21,27 @@ def analyze():
 
         image_path = save_image_temp(image_file) if image_file else None
 
-        # 1️⃣ GPT 요약 및 키워드 추출
+        # GPT 요약 및 키워드 추출
         summary = generate_summary(description, similarity_score=None)
         keywords = extract_keywords(description)
         clip_description = summary + " " + keywords
         clip_description = clip_description[:300]
 
-        # 2️⃣ CLIP 유사도 계산
+        # 영어 번역 후 CLIP 유사도 측정용 텍스트로 사용
+        clip_description_en = translate_to_english(clip_description)
+
+        # CLIP 유사도 계산
         similarity_score = None
         image_vector = None
         if image_path:
-            similarity_score = get_clip_similarity(image_path, clip_description)
+            similarity_score = get_clip_similarity(image_path, clip_description_en)
             image_vector = get_clip_vector(image_path)
 
-        # 3️⃣ GPT 기반 카테고리 분류 및 중요도 평가
+        # GPT 기반 카테고리 분류 및 중요도 평가
         category = classify_category(description)
         importance = rate_importance(description)
 
-        # 4️⃣ 유사도 보정
-        if similarity_score is not None:
-            similarity_score = adjust_similarity(description, image_path, similarity_score, category=category)
-
-        # 5️⃣ 중복 검사 및 신뢰도 판단
+        # 중복 검사 및 신뢰도 판단
         all_data = load_collected_data()
         existing_vectors = [d["image_vector"] for d in all_data if d.get("image_vector")]
 
@@ -80,7 +55,17 @@ def analyze():
             reliable = similar_count >= 5
 
         if isinstance(similarity_score, (int, float)):
-            similarity_percent = round(similarity_score * 100, 1)
+            raw_percent = round(similarity_score * 100, 1)
+
+            def normalize_similarity_percent(percent):
+                if percent <= 20:
+                    return round(percent / 20 * 33, 1)
+                elif percent <= 27:
+                    return round(33 + ((percent - 20) / 7) * 33, 1)
+                else:
+                    return round(66 + ((percent - 27) / 73) * 34, 1)
+
+            similarity_percent = normalize_similarity_percent(raw_percent)
         else:
             similarity_percent = "이미지 없음"
 
@@ -108,7 +93,7 @@ def analyze():
         })
 
     except Exception as e:
-        print("💥 [ERROR] 예외 발생:", e)
+        print("[ERROR] 예외 발생:", e)
         import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500

@@ -83,3 +83,19 @@ def rate_importance(description):
     )
 
     return response['choices'][0]['message']['content']
+
+def translate_to_english(text):
+    prompt = f"""
+다음 한국어 문장을 영어로 자연스럽게 번역해 주세요. 번역 외 불필요한 말은 포함하지 마세요.
+
+한국어: "{text}"
+영어:
+"""
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "너는 정확하고 간결하게 번역하는 전문가야."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    return response['choices'][0]['message']['content'].strip()
