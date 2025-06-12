@@ -116,10 +116,12 @@ else:
     if len(data) == 0:
         st.warning("저장된 제보가 없습니다.")
     else:
-        for i, result_entry in enumerate(data[::-1], start=1):  # 최신 순으로 출력
+        total = len(data)
+        for i, result_entry in enumerate(data[::-1]):
+            display_index = total - i
             st.markdown("<span style='color: white;'>______________________________________________________________________________________</span>", unsafe_allow_html=True)
 
-            st.markdown(f"### 📄 제보 {i}")
+            st.markdown(f"### 📄 제보 {display_index}")
             for key, value in result_entry.items():
                 if(key=="id"): continue
                 if(key=="image_path" and value==None):
@@ -129,7 +131,7 @@ else:
                         st.image(value, width=300)
                     except:
                         st.warning("이미지를 불러올 수 없습니다.")
-                elif(key=="similarity"and value==None):
+                elif(key=="similarity" and value==None):
                     continue
                 elif(key=="image_vector"):
                     continue
@@ -143,6 +145,3 @@ else:
                 else:
                     st.write(f"{value}")
             st.markdown("<span style='color: white;'>______________________________________________________________________________________</span>", unsafe_allow_html=True)
-
-
-
